@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomTab xmlns="http://soap.sforce.com/2006/04/metadata">
+    <description>List of Associated Cases</description>
+    <flexiPage>Case_List</flexiPage>
+    <label>Case List</label>
+    <motif>Custom37: Bridge</motif>
+</CustomTab>

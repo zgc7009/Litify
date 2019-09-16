@@ -1,0 +1,5 @@
+<design:component label="Main Content Layout">
+    <flexipage:template>
+        <flexipage:region name="main" defaultWidth="LARGE" />
+    </flexipage:template>
+</design:component>

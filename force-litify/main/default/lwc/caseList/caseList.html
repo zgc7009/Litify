@@ -1,0 +1,35 @@
+<template>
+    <div>
+        <template if:true={cases.data}>
+            <template if:true={cases.data.length}>
+                <p>You currently have {cases.data.length} cases</p>
+                <div class="content">
+                    <template
+                        for:each={cases.data}
+                        for:item="litCase">
+                        <div style="margin:20px;background:blue;"
+                            key={litCase.Id}>
+                            {litCase.Name}
+                            {litCase.Description__c}
+                        </div>
+                        
+                        <!--
+                        <c-case-list-item
+                            key={litCase.Id}
+                            case={litCase}
+                            onselected={handleCaseSelected}
+                            class="slds-m-around_x-small">
+                        </c-case-list-item>
+                        -->
+                    </template>
+                </div>
+            </template>
+            <template if:false={cases.data.length}>
+                <!-- Do empty state -->
+            </template>
+        </template>
+        <template if:false={cases.data}>
+            <h2>Unable to pull data from Salesforce.</h2>
+        </template>
+    </div>
+</template>
