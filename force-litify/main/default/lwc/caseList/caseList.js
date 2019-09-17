@@ -1,8 +1,12 @@
 import { LightningElement, track, wire } from 'lwc';
 import { CurrentPageReference } from 'lightning/navigation';
 
+/** TODO add this whenever we get to the point we are refreshing the page */
+//import { refreshApex } from '@salesforce/apex';
+//Use example: refreshApex(wiredProperty)
+
 /** getCases() method in CaseController Apex class */
-import getCases from '@salesforce/apex/CaseController.getCases';
+import getCases from '@salesforce/apex/CaseListController.getCases';
 
 /**
  * Container component that loads and displays a list of Case__c records.

@@ -1,10 +1,36 @@
 <template>
     <lightning-card 
         class="wrapper"
-        title="Cases" 
+        title="Your Cases" 
         icon-name="standard:link" 
         key={litCase.Id}>
-        {litCase.Name}
-        {litCase.Description__c}
+        <article class="slds-card">
+            <span class="slds-assistive-text">Case</span>
+            <div class="slds-card__body slds-card__body_inner">
+                {litCase.Name}
+                {litCase.Description__c}
+            </div>
+            <template if:true={caseEntities.data}>
+                <template if:true={caseEntities.data.length}>
+                    <footer if:false={expanded} class="slds-card__footer">
+                        <lightning-button label="View All Involved" onclick={toggleExpansion}></lightning-button>
+                        <span class="slds-assistive-text">View All Involved</span>
+                    </footer>
+                    <div if:true={expanded}>
+                        <template
+                            for:each={caseEntities.data}
+                            for:item="entity">
+                            <p key={entity.UserOrGroupId}>
+                                UserId: {entity.UserOrGroupId}
+                            </p>
+                        </template>
+                        <footer class="slds-card__footer">
+                            <lightning-button label="Collapse" onclick={toggleExpansion}></lightning-button>
+                            <span class="slds-assistive-text">Hide All Involved</span>
+                        </footer>
+                    </div>
+                </template>
+            </template>
+        </article>
     </lightning-card>
 </template>
