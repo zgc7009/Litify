@@ -4,6 +4,9 @@
         "paths": {
             "c/caseList": [
                 "caseList/caseList.js"
+            ],
+            "c/caseListItem": [
+                "caseListItem/caseListItem.js"
             ]
         },
         "experimentalDecorators": true

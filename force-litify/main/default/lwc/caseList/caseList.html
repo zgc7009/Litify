@@ -7,20 +7,11 @@
                     <template
                         for:each={cases.data}
                         for:item="litCase">
-                        <div style="margin:20px;background:blue;"
-                            key={litCase.Id}>
-                            {litCase.Name}
-                            {litCase.Description__c}
-                        </div>
-                        
-                        <!--
                         <c-case-list-item
                             key={litCase.Id}
-                            case={litCase}
-                            onselected={handleCaseSelected}
+                            lit-case={litCase}
                             class="slds-m-around_x-small">
                         </c-case-list-item>
-                        -->
                     </template>
                 </div>
             </template>
