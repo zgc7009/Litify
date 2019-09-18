@@ -1,0 +1,24 @@
+<template>
+    <lightning-card 
+        key={entity.Id}>
+        <span class="slds-assistive-text">Case Entity</span>
+        <div class="slds-card__body slds-card__body_inner">
+            <div class="slds-grid slds-gutters">
+                <div class="slds-col slds-size_4-of-5">
+                    <h2>{entity.LastName}, {entity.FirstName}</h2>
+                    <p>{entity.Email}</p>
+                </div>
+                <div class="slds-col slds-size_1-of-5">
+                    <!--
+                    <lightning:buttonIcon 
+                        iconName="utility:remove" 
+                        variant="container" 
+                        alternativeText="Remove Entity"
+                        onclick="{!removeEntity}"  />
+                    -->
+                    <span class="slds-assistive-text">Remove Entity</span>
+                </div>
+            </div>
+        </div>
+    </lightning-card>
+</template>
