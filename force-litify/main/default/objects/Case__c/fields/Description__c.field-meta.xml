@@ -6,23 +6,7 @@
     <inlineHelpText>A brief overview of the case.</inlineHelpText>
     <label>Description</label>
     <length>2083</length>
-    <trackHistory>false</trackHistory>
     <trackTrending>false</trackTrending>
     <type>LongTextArea</type>
     <visibleLines>3</visibleLines>
 </CustomField>
-
-<!-- For relationships
-<referenceTo>LLC_BI__Application__c</referenceTo>
-<relationshipLabel>Contexts</relationshipLabel>
-<relationshipName>Contexts</relationshipName>
-
-For lookup
-<type>Lookup</type>
-
-For master-detail
-<relationshipOrder>0</relationshipOrder>
-<reparentableMasterDetail>true</reparentableMasterDetail>
-<type>MasterDetail</type>
-<writeRequiresMasterRead>false</writeRequiresMasterRead>
--->

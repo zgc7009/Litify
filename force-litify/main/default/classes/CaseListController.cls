@@ -2,6 +2,28 @@ public with sharing class CaseListController {
     public class Filters {
     }
 
+    @AuraEnabled(Cacheable=false)
+    public static Boolean dropShareRecord(Id caseId, Id entityId) {
+        List<Case__share> shareRecord = [
+            SELECT
+                Id
+            FROM
+                Case__share
+            WHERE
+                ParentId = :caseId
+            AND
+                UserOrGroupId = :entityId
+        ];
+
+        if (shareRecord.isEmpty()) {
+            throw new XInvalidParameterException('Invalid parameters: ' + caseId + ' || ' + entityId);
+        }
+
+        delete shareRecord[0];
+
+        return true;
+    }
+
     @AuraEnabled(Cacheable=true)
     public static List<Case__c> getCases(Filters filters) {
         return [
@@ -92,4 +114,6 @@ public with sharing class CaseListController {
 
         addUsersFromGroups(childGroupIds, userIds);
     }
+
+    public class XInvalidParameterException extends Exception{}
 }

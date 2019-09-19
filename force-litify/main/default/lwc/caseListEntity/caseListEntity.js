@@ -9,7 +9,10 @@ export default class CaseListEntity extends LightningElement {
 
     @api
     removeEntity() {
-        // TODO finish this
+        const confirmationRequest = new CustomEvent("drop", {
+            detail: this.entityId
+        });
+
+        this.dispatchEvent(confirmationRequest);
     }
 }
-    

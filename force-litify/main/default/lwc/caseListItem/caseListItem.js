@@ -19,5 +19,16 @@ export default class CaseListItem extends LightningElement {
     toggleExpansion() {
         this.expanded = !this.expanded;
     }
+
+    @api
+    propogateRemoveConfirmation(detail) {
+        const confirmationRequest = new CustomEvent("drop", {
+            detail: {
+                case: this.litCase.Id,
+                entity: detail.entityId
+            }
+        });
+
+        this.dispatchEvent(confirmationRequest);
+    }
 }
-    

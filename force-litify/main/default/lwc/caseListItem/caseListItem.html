@@ -17,15 +17,24 @@
                     </footer>
                     <div if:true={expanded}
                         class="slds-border_top">
-                        <div class="slds-text-heading_small slds-m-around_small">
-                            <header>Involved Entities</header>
+                        <div class="slds-m-around_medium">
+                            <div class="slds-text-heading_small">
+                                <header>Involved Entities</header>
+                            </div>
+                            <div class="slds-text-body_regular">
+                                <p>The entities listed below have sharing records with the Case in context.
+                                    Based on Salesforce functionality, any User higher in the role heirarrchy
+                                    will also have visibility to the case record.
+                                </p>
+                            </div>
                         </div>
                         <template
                             for:each={caseEntities.data}
                             for:item="entity">
                             <c-case-list-entity
                                 key={entity.Id}
-                                entity={entity}>
+                                entity={entity}
+                                ondrop={propogateRemoveConfirmation}>
                             </c-case-list-entity>
                         </template>
                         <footer class="slds-card__footer">

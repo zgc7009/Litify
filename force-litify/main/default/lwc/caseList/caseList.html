@@ -10,13 +10,23 @@
                         <c-case-list-item
                             key={litCase.Id}
                             lit-case={litCase}
-                            class="slds-m-around_x-small">
+                            class="slds-m-around_x-small"
+                            ondrop={promptEntityRemoval}>
                         </c-case-list-item>
                     </template>
                 </div>
             </template>
             <template if:false={cases.data.length}>
                 <!-- Do empty state -->
+            </template>
+            <template if:true={confirmationModal}>
+                <c-confirmation-modal
+                    key={modalKey}
+                    header-text="Are you sure?"
+                    body-text="This user and their supervisors they will no longer have access to this case."
+                    cancel-text="Cancel"
+                    confirmation-text="Do It">
+                </c-confirmation-modal>
             </template>
         </template>
         <template if:false={cases.data}>

@@ -1,15 +1,24 @@
 {
     "compilerOptions": {
+        "experimentalDecorators": true,
         "baseUrl": ".",
         "paths": {
             "c/caseList": [
                 "caseList/caseList.js"
             ],
+            "c/caseListEntity": [
+                "caseListEntity/caseListEntity.js"
+            ],
             "c/caseListItem": [
                 "caseListItem/caseListItem.js"
+            ],
+            "c/confirmationModal": [
+                "confirmationModal/confirmationModal.js"
+            ],
+            "c/pubsub": [
+                "pubsub/pubsub.js"
             ]
-        },
-        "experimecaseListEntity/caseItemEntity.js
+        }
     },
     "include": [
         "**/*",
