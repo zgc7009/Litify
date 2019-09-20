@@ -2,14 +2,10 @@ import { LightningElement, track, wire, api } from 'lwc';
 import { registerListener } from 'c/pubsub';
 import { CurrentPageReference } from 'lightning/navigation';
 
-/** TODO add this whenever we get to the point we are refreshing the page */
-//import { refreshApex } from '@salesforce/apex';
-//Use example: refreshApex(wiredProperty)
+import { refreshApex } from '@salesforce/apex';
 
-/** getCases() method in CaseController Apex class */
 import getCases from '@salesforce/apex/CaseListController.getCases';
 import dropShareRecord from '@salesforce/apex/CaseListController.dropShareRecord';
-
 
 /**
  * Container component that loads and displays a list of Case__c records.
@@ -43,11 +39,24 @@ export default class CaseList extends LightningElement {
 
     @api
     confirmEntityRemoval() {
-        dropShareRecord(this.contextCaseId, this.contextEntityId).then(
+        const that = this;
+        dropShareRecord({
+            caseId: this.contextCaseId,
+            entityId: this.contextEntityId
+        }).then(
             function(response) {
+                if(response === true) {
+                    refreshApex(that.cases);
+                    this.confirmationModal = false;
+                } else {
+                    console.error('Unable to get cases');
+                }
+
                 this.confirmationModal = !response;
             }
-        );
+        ).catch(e => {
+            console.error(e);
+        });
     }
 
     @api

@@ -3,6 +3,40 @@ public with sharing class CaseListController {
     }
 
     @AuraEnabled(Cacheable=false)
+    public static Boolean addShareRecord(Id recordId, String userOrGroupIdString) {
+        Id userOrGroupId = Id.valueOf(userOrGroupIdString);
+        if (userOrGroupId.getSObjectType() != User.getSObjectType() &&
+                userOrGroupId.getSObjectType() != Group.getSObjectType()) {
+            throw new AuraHandledException('Inavlid share Id: ' + userOrGroupId);
+        }
+
+        Case__share caseShr  = new Case__share();
+        caseShr.ParentId = recordId;
+        caseShr.UserOrGroupId = userOrGroupId;
+        caseShr.AccessLevel = 'Read';
+        caseShr.RowCause = Schema.Case__Share.RowCause.Manual;
+        Database.SaveResult sr = executeInsert(caseShr);
+
+        if(sr.isSuccess()){
+            return true;
+        }
+        else {
+            Database.Error err = sr.getErrors()[0];
+            
+            // Check if the error is related to trival access level.
+            // Access level must be more permissive than the object's default.
+            // These sharing records are not required and thus an insert exception is acceptable. 
+            if(err.getStatusCode() == StatusCode.FIELD_FILTER_VALIDATION_EXCEPTION  &&  
+                    err.getMessage().contains('AccessLevel')){
+                return true;
+            }
+            else{
+                return false;
+            }
+        }
+    }
+
+    @AuraEnabled(Cacheable=false)
     public static Boolean dropShareRecord(Id caseId, Id entityId) {
         List<Case__share> shareRecord = [
             SELECT
@@ -16,10 +50,10 @@ public with sharing class CaseListController {
         ];
 
         if (shareRecord.isEmpty()) {
-            throw new XInvalidParameterException('Invalid parameters: ' + caseId + ' || ' + entityId);
+            throw new AuraHandledException('Invalid parameters: ' + caseId + ' || ' + entityId);
         }
 
-        delete shareRecord[0];
+        executeDelete(shareRecord[0]);
 
         return true;
     }
@@ -115,5 +149,19 @@ public with sharing class CaseListController {
         addUsersFromGroups(childGroupIds, userIds);
     }
 
-    public class XInvalidParameterException extends Exception{}
+    private static void executeDelete(SObject record) {
+        try {
+            delete record;
+        } catch (Exception ex) {
+            throw new AuraHandledException(ex.getMessage());
+        }
+    }
+
+    private static Database.SaveResult executeInsert(SObject record) {
+        try {
+            return Database.insert(record, false);
+        } catch (Exception ex) {
+            throw new AuraHandledException(ex.getMessage());
+        }
+    }
 }

@@ -1,6 +1,10 @@
 import { LightningElement, api, track, wire } from 'lwc';
 
-/** getCases() method in CaseController Apex class */
+import './caseListItem.css';
+
+import { refreshApex } from '@salesforce/apex';
+
+import addShareRecord from '@salesforce/apex/CaseListController.addShareRecord';
 import getCaseEntities from '@salesforce/apex/CaseListController.getCaseEntities';
 
 /**
@@ -9,11 +13,23 @@ import getCaseEntities from '@salesforce/apex/CaseListController.getCaseEntities
  */
 export default class CaseListItem extends LightningElement {
     @api litCase;
-
+    
+    @track errorMessage;
     @track expanded = false;
+    @track queryTerm;
 
     @wire(getCaseEntities, { caseId: '$litCase.Id' })
     caseEntities;
+
+    @api
+    handleKeyUp(evt) {
+        const isEnterKey = evt.keyCode === 13;
+        if (isEnterKey) {
+            this.submitAddEntity();
+        } else {
+            this.queryTerm = evt.target.value;
+        }
+    }
 
     @api
     toggleExpansion() {
@@ -30,5 +46,37 @@ export default class CaseListItem extends LightningElement {
         });
 
         this.dispatchEvent(confirmationRequest);
+    }
+
+    @api
+    submitAddEntity() {
+        this.addEntity(this.queryTerm);
+    }
+
+    addEntity(entityId) {
+        if (!this.isValidId(entityId)) {
+            this.errorMessage = 'Invalid entity Id: ' + entityId;
+            return;
+        }
+
+        const that = this;
+        addShareRecord({
+            recordId: this.litCase.Id,
+            userOrGroupIdString: entityId
+        }).then(
+            function(response) {
+                if(response === true) {
+                    refreshApex(that.caseEntities);
+                } else {
+                    this.errorMessage = 'Not shared: ' + response;
+                }
+            }
+        ).catch(e => {
+            console.error(e);
+        });
+    }
+
+    isValidId(idValue) {
+        return idValue && (idValue.length === 15 || idValue.length === 18);
     }
 }

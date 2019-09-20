@@ -8,6 +8,22 @@
             <div class="slds-card__body slds-card__body_inner">
                 {litCase.Name}
                 {litCase.Description__c}
+                <div  class="slds-m-bottom_small" onkeyup={handleKeyUp}>
+                    <lightning-input
+                        name="entity-search"
+                        label="Entity Id"
+                        type="search"
+                        placeholder="15 or 18 digit Id"
+                    ></lightning-input>
+                    <div if:true={errorMessage} class="slds-text-body_medium error">
+                        {errorMessage}
+                    </div>
+                </div>
+                <lightning-button if:true={queryTerm}
+                    label="Add Entity" 
+                    title="Add Entity" 
+                    onclick={submitAddEntity}>
+                </lightning-button>
             </div>
             <template if:true={caseEntities.data}>
                 <template if:true={caseEntities.data.length}>
