@@ -15,8 +15,11 @@
                         type="search"
                         placeholder="15 or 18 digit Id"
                     ></lightning-input>
-                    <div if:true={errorMessage} class="slds-text-body_medium error">
-                        {errorMessage}
+                    <div if:true={addErrorMessage} class="slds-text-body_medium error">
+                        {addErrorMessage}
+                    </div>
+                    <div if:true={addSuccessMessage} class="slds-text-body_medium success">
+                        {addSuccessMessage}
                     </div>
                 </div>
                 <lightning-button if:true={queryTerm}
@@ -50,10 +53,16 @@
                             <c-case-list-entity
                                 key={entity.Id}
                                 entity={entity}
-                                ondrop={propogateRemoveConfirmation}>
+                                ondrop={pushRemoveConfirmation}>
                             </c-case-list-entity>
                         </template>
-                        <footer class="slds-card__footer">
+                        <footer class="slds-card__footer slds-m-top_small">
+                            <div if:true={deleteErrorMessage} class="slds-text-body_medium error">
+                                {deleteErrorMessage}
+                            </div>
+                            <div if:true={deleteSuccessMessage} class="slds-text-body_medium success">
+                                {deleteSuccessMessage}
+                            </div>
                             <lightning-button label="Collapse" onclick={toggleExpansion}></lightning-button>
                             <span class="slds-assistive-text">Hide All Involved</span>
                         </footer>

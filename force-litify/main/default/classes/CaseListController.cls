@@ -53,7 +53,7 @@ public with sharing class CaseListController {
             throw new AuraHandledException('Invalid parameters: ' + caseId + ' || ' + entityId);
         }
 
-        executeDelete(shareRecord[0]);
+        executeDelete(shareRecord);
 
         return true;
     }
@@ -96,6 +96,18 @@ public with sharing class CaseListController {
         return getUsersFromShareRecords(shareRecords);
     }
 
+    @AuraEnabled(Cacheable=true)
+    public static Id getCaseOwner(Id caseId) {
+        return [
+            SELECT
+                OwnerId
+            FROM
+                Case__c
+            WHERE
+                Id = :caseId
+        ].OwnerId;
+    }
+
     private static List<User> getUsersFromShareRecords(List<Case__share> shareRecords) {
         Set<Id> userIds = new Set<Id>();
         Set<Id> groupIds = new Set<Id>();
@@ -113,6 +125,7 @@ public with sharing class CaseListController {
 
         return [
             SELECT
+                Id,
                 FirstName,
                 LastName,
                 Email
@@ -149,9 +162,9 @@ public with sharing class CaseListController {
         addUsersFromGroups(childGroupIds, userIds);
     }
 
-    private static void executeDelete(SObject record) {
+    private static void executeDelete(List<SObject> records) {
         try {
-            delete record;
+            delete records;
         } catch (Exception ex) {
             throw new AuraHandledException(ex.getMessage());
         }

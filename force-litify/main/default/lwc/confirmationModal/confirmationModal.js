@@ -15,12 +15,12 @@ export default class ConfirmationModal extends LightningElement {
     @wire(CurrentPageReference) pageRef;
 
     @api
-    conrim() {
-        fireEvent(this.pageRef, 'confirmRemoval', true);
+    confirm() {
+        fireEvent(this.pageRef, 'confirmRemoval');
     }
 
     @api
     cancel() {
-        fireEvent(this.pageRef, 'cancelRemoval', false);
+        fireEvent(this.pageRef, 'cancelRemoval');
     }
 }

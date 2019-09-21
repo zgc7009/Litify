@@ -1,8 +1,9 @@
 import { LightningElement, track, wire, api } from 'lwc';
-import { registerListener } from 'c/pubsub';
 import { CurrentPageReference } from 'lightning/navigation';
 
-import { refreshApex } from '@salesforce/apex';
+import { fireEvent } from 'c/pubsub';
+import { registerListener } from 'c/pubsub';
+import { unregisterListener } from 'c/pubsub';
 
 import getCases from '@salesforce/apex/CaseListController.getCases';
 import dropShareRecord from '@salesforce/apex/CaseListController.dropShareRecord';
@@ -32,6 +33,11 @@ export default class CaseList extends LightningElement {
         registerListener('confirmRemoval', this.confirmEntityRemoval, this);
     }
 
+    disconnectedCallback() {
+        unregisterListener('cancelRemoval', this.cancelEntityRemoval, this);
+        unregisterListener('confirmRemoval', this.confirmEntityRemoval, this);
+    }
+
     @api
     cancelEntityRemoval() {
         this.confirmationModal = false;
@@ -46,13 +52,12 @@ export default class CaseList extends LightningElement {
         }).then(
             function(response) {
                 if(response === true) {
-                    refreshApex(that.cases);
-                    this.confirmationModal = false;
+                    fireEvent(that.pageRef, 'shareDropSuccess');
                 } else {
-                    console.error('Unable to get cases');
+                    fireEvent(that.pageRef, 'shareDropFailure');
                 }
 
-                this.confirmationModal = !response;
+                that.confirmationModal = !response;
             }
         ).catch(e => {
             console.error(e);
@@ -60,9 +65,9 @@ export default class CaseList extends LightningElement {
     }
 
     @api
-    promptEntityRemoval(detail) {
-        this.contextCaseId = detail.case;
-        this.contextEntityId = detail.entity;
+    promptEntityRemoval(event) {
+        this.contextCaseId = event.detail.case;
+        this.contextEntityId = event.detail.entity;
         this.confirmationModal = true;
     }
 }
