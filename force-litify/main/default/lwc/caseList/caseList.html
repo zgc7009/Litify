@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div class="wrapper">
         <template if:true={cases.data}>
             <template if:true={cases.data.length}>
                 <div class="content">
@@ -8,6 +8,7 @@
                         for:item="litCase">
                         <c-case-list-item
                             key={litCase.Id}
+                            lit-case-id={litCase.Id}
                             lit-case={litCase}
                             class="slds-m-around_x-small"
                             ondrop={promptEntityRemoval}>

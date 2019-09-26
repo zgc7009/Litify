@@ -11,9 +11,9 @@
                 <div  class="slds-m-bottom_small" onkeyup={handleKeyUp}>
                     <lightning-input
                         name="entity-search"
-                        label="Entity Id"
-                        type="search"
-                        placeholder="15 or 18 digit Id"
+                        label="Provide access to:"
+                        type="text"
+                        placeholder="User or Group Salesforce Id"
                     ></lightning-input>
                     <div if:true={addErrorMessage} class="slds-text-body_medium error">
                         {addErrorMessage}
@@ -23,11 +23,12 @@
                     </div>
                 </div>
                 <lightning-button if:true={queryTerm}
-                    label="Add Entity" 
+                    label="Share Case" 
                     title="Add Entity" 
                     onclick={submitAddEntity}>
                 </lightning-button>
             </div>
+            
             <template if:true={caseEntities.data}>
                 <template if:true={caseEntities.data.length}>
                     <footer if:false={expanded} class="slds-card__footer">
@@ -35,6 +36,7 @@
                         <span class="slds-assistive-text">View All Involved</span>
                     </footer>
                     <div if:true={expanded}
+                        id="expanded"
                         class="slds-border_top">
                         <div class="slds-m-around_medium">
                             <div class="slds-text-heading_small">
@@ -50,11 +52,13 @@
                         <template
                             for:each={caseEntities.data}
                             for:item="entity">
-                            <c-case-list-entity
-                                key={entity.Id}
-                                entity={entity}
-                                ondrop={pushRemoveConfirmation}>
-                            </c-case-list-entity>
+                            <div class="entity"
+                                key={entity.Id}>
+                                <c-case-list-entity
+                                    entity={entity}
+                                    ondrop={pushRemoveConfirmation}>
+                                </c-case-list-entity>
+                            </div>
                         </template>
                         <footer class="slds-card__footer slds-m-top_small">
                             <div if:true={deleteErrorMessage} class="slds-text-body_medium error">
