@@ -21,7 +21,7 @@ export default class CaseList extends LightningElement {
     @wire(CurrentPageReference) pageRef;
 
     @wire(getCases, {})
-    cases;
+    cases
 
     connectedCallback() {
         // Register removal listeners that will handle confirmation responses

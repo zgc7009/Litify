@@ -5,6 +5,11 @@ import { LightningElement, api } from 'lwc';
  */
 export default class CaseListEntity extends LightningElement {
     @api entity;
+    @api icon;
+
+    connectedCallback() {
+        this.icon = this.entity.isIndividual ? 'standard:individual' : 'standard:groups';
+    }
 
     // Triggered when a requets is made to remove an entity
     @api
@@ -12,7 +17,7 @@ export default class CaseListEntity extends LightningElement {
         // Build the request details
         const confirmationRequest = new CustomEvent("drop", {
             detail: {
-                entity: this.entity.Id
+                entity: this.entity.sId
             }
         });
 

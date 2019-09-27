@@ -111,21 +111,6 @@ public class CaseListControllerTest {
     }
 
     @isTest
-    public static void testAddUsersFromGroups() {
-        User group1User1 = getTestUser(TEST_USERNAME_1);
-        User group1User2 = getTestUser(TEST_USERNAME_2);
-        User u = getTestUser(TEST_USERNAME_3);
-
-        Id testGroup1Id = createTestGroup(group1User1.Id, group1User2.Id);
-        Id testGroup2Id = createTestGroup(u.Id, testGroup1Id);
-
-        Test.startTest();
-        Set<Id> userIds = CaseListController.addUsersFromGroups(new Set<Id> { testGroup2Id }, new Set<Id>());
-        System.assertEquals(3, userIds.size());
-        Test.stopTest();
-    }
-
-    @isTest
     public static void testDropShareRecordForGroup() {
         User groupUser1 = getTestUser(TEST_USERNAME_3);
         User groupUser2 = getTestUser(TEST_USERNAME_4);
@@ -178,7 +163,7 @@ public class CaseListControllerTest {
     @isTest
     public static void testGetCaseEntities() {
         Case__c testCase = getTestCase();
-        List<User> entities;
+        List<AEntity> entities;
 
         Test.startTest();
         entities = CaseListController.getCaseEntities(testCase.Id);
@@ -187,8 +172,8 @@ public class CaseListControllerTest {
         System.assertEquals(2, entities.size());
 
         Set<Id> entityIds = new Set<Id>();
-        for (User entity : entities) {
-            entityIds.add(entity.Id);
+        for (AEntity entity : entities) {
+            entityIds.add(entity.sId);
         }
 
         User u = getTestUser(TEST_USERNAME_1);
@@ -214,7 +199,7 @@ public class CaseListControllerTest {
         Test.startTest();
         CaseListController.addShareRecord(testCase.Id, testGroupId);
         Integer postShareCount = CaseListController.getCaseEntities(testCase.Id).size();
-        System.assertEquals(preShareCount + 2, postShareCount);
+        System.assertEquals(preShareCount + 1, postShareCount);
         Test.stopTest();
 
         validateShared(groupUser1);
@@ -231,7 +216,7 @@ public class CaseListControllerTest {
         Test.stopTest();
     }
 
-    private static Id createTestGroup(Id groupUserId1, Id groupUserId2) {
+    public static Id createTestGroup(Id groupUserId1, Id groupUserId2) {
         Id testGroupId;
 
         System.runAs(new User(Id = UserInfo.getUserId())) {
@@ -257,7 +242,7 @@ public class CaseListControllerTest {
         return testGroupId;
     }
 
-    private static Id createTestUser(String username, String roleName) {
+    public static Id createTestUser(String username, String roleName) {
         User standardUser = new User(
 			Alias = 'testuser',
 			Email = username,
@@ -310,18 +295,7 @@ public class CaseListControllerTest {
         return null;
     }
 
-    private static Group getTestGroup() {
-        return [
-            SELECT 
-                Id
-            FROM
-                Group
-            WHERE
-                Name = :TEST_GROUP
-        ];
-    }
-
-    private static User getTestUser(String username) {
+    public static User getTestUser(String username) {
         return [
             SELECT
                 Id

@@ -47,9 +47,8 @@ public with sharing class CaseListController {
             }
             
             throwDatabaseErrors(sr.getErrors());
+            throw new AuraHandledException('Unable to share for: ' + entityId);
         }
-
-        return true;
     }
 
     /**
@@ -108,11 +107,11 @@ public with sharing class CaseListController {
      * @return List of Users with explicit access to the Case record
      */
     @AuraEnabled(Cacheable=true)
-    public static List<User> getCaseEntities(Id caseId) {
+    public static List<AEntity> getCaseEntities(Id caseId) {
         List<Case__share> shareRecords = getShareRecords(caseId);
 
         if (shareRecords.isEmpty()) {
-            return new List<User>();
+            return new List<AEntity>();
         }
 
         return getUsersFromShareRecords(shareRecords);
@@ -136,40 +135,18 @@ public with sharing class CaseListController {
         ].OwnerId;
     }
 
-    /**
-     * A recursive method that will break down group records and ensure we have
-     * a proper set of User Ids to work with instead of a combination of both
-     * User and Group. Only exposing a Group and not the Users in it could 
-     * potentially mask a large subset of unknown Users with access to a record.
-     * @param groupIds A set of Group Ids to be recursed through to expose User records
-     * @param userIds A set of User Ids that will be appended to
-     * @return Final set of all User Ids in the Groups
-     */
-    @TestVisible
-    private static Set<Id> addUsersFromGroups(Set<Id> groupIds, Set<Id> userIds) {
-        List<GroupMember> groupMembers = [
+    public static List<User> getUsersFromIds(Set<Id> userIds) {
+        return [
             SELECT
-                UserOrGroupId
+                Id,
+                FirstName,
+                LastName,
+                Email
             FROM
-                GroupMember
+                User
             WHERE
-                GroupId IN :groupIds
+                Id IN :userIds
         ];
-
-        Set<Id> childGroupIds = new Set<Id>();
-        for (GroupMember gm : groupMembers) {
-            if (gm.UserOrGroupId.getSObjectType() == User.getSObjectType()) {
-                userIds.add(gm.UserOrGroupId);
-            } else {
-                childGroupIds.add(gm.UserOrGroupId);
-            }
-        }
-
-        if (childGroupIds.isEmpty()) {
-            return userIds;
-        }
-
-        return addUsersFromGroups(childGroupIds, userIds);
     }
 
     /**
@@ -196,6 +173,18 @@ public with sharing class CaseListController {
         }
     }
 
+    private static List<Group> getParentGroups(Set<Id> groupIds) {
+        return [
+            SELECT
+                Id,
+                Name
+            FROM
+                Group
+            WHERE
+                Id IN :groupIds
+        ];
+    }
+
     /**
      * Get all share records associated with a particular Case.
      * @param caseId Id of the case to get share records for
@@ -219,32 +208,43 @@ public with sharing class CaseListController {
      * @return List of Users associated with the given share records
      */
     @TestVisible
-    private static List<User> getUsersFromShareRecords(List<Case__share> shareRecords) {
+    private static List<AEntity> getUsersFromShareRecords(List<Case__share> shareRecords) {
         Set<Id> userIds = new Set<Id>();
         Set<Id> groupIds = new Set<Id>();
         for (Case__share shareRecord : shareRecords) {
-            if (shareRecord.UserOrGroupId.getSObjectType() == User.getSObjectType()) {
+            if (isUser(shareRecord.UserOrGroupId)) {
                 userIds.add(shareRecord.UserOrGroupId);
-            } else {
+            } else if (isGroup(shareRecord.UserOrGroupId)) {
                 groupIds.add(shareRecord.UserOrGroupId);
+            } else {
+                throw new AuraHandledException('Inavlid UserOrGroupId on share record: ' + shareRecord);
             }
         }
-        
+
+        List<User> users = getUsersFromIds(userIds);
+        List<UserEntity> userEntities = new List<UserEntity>();
+        for (User u : users) {
+            userEntities.add(new UserEntity(u));
+        }
+
+        List<Group> groups = getParentGroups(groupIds);
+        List<GroupEntity> groupEntities = new List<GroupEntity>();
+        for (Group g : groups) {
+            groupEntities.add(new GroupEntity(g));
+        }
+
+        List<AEntity> allEntities = new List<AEntity>();
+        allEntities.addAll(userEntities);
+        allEntities.addAll(groupEntities);
+        return allEntities;
+
+        /*
         if (!groupIds.isEmpty()) {
             userIds = addUsersFromGroups(groupIds, userIds);
         }
 
-        return [
-            SELECT
-                Id,
-                FirstName,
-                LastName,
-                Email
-            FROM
-                User
-            WHERE
-                Id IN :userIds
-        ];
+        return getUsersFromIds(userIds);
+        */
     }
 
     private static Boolean isGroup(Id entityId) {

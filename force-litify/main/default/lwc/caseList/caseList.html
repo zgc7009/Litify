@@ -29,8 +29,11 @@
                 </c-confirmation-modal>
             </template>
         </template>
-        <template if:false={cases.data}>
-            <h2>Unable to pull data from Salesforce.</h2>
+        <template if:false={cases} class="slsd-empty-heading_regular empty-text">
+            <h2>Loading...</h2>
+        </template>
+        <template if:false={cases.data} class="slsd-empty-heading_regular empty-text">
+            <h2>You have no cases yet.</h2>
         </template>
     </div>
 </template>

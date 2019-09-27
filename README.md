@@ -44,7 +44,7 @@ C --> F[*]
 
 If installing the unamanged package, the role and profile metadata will need to be deployed or manually configured in the org that the package is installed in. It is advised you deploy this repo from GitHub instead of installing the package if possible. For manual configuration, see meatadata files for required settings.
 
-https://login.salesforce.com/packaging/installPackage.apexp?p0=04t4T0000011BCr
+https://login.salesforce.com/packaging/installPackage.apexp?p0=04t4T000001ZCeq
 
 ## Visual Helper(s)
 
@@ -68,8 +68,9 @@ There is always room for improvement. Given that this is meant as an assessment 
 1. __Security.__ First and foremost. The security model is either not scaleable, or not secure. More thought would need to be put into architecting a proper security model to accommodate multi-business scenarios. More manual configuration could be done to accommodate for now through things like sharing settings, but that seemed out of scope for the assessment. You can also share records indiscriminately with no real checks happening. 
 2. __Efficiency.__ There are places I believe things could be more efficient, like the way things are loaded. In some cases, decisions were made to do things differently than I normally would in an effort to display an ability to work with the framework. An example would be the way entities are added and removed, which is currently done the way it is to display use of multi-component designs.
 3. __Edge Cases.__ There are plenty of holes around the edge and places that are not thoroughly tested.
-4. __Testing.__ Code coverage of the Apex controller is right around 80% while the jest tests were written just to show an understsanding of a front-end testing framework.
+4. __Testing.__ Code coverage of the Apex controller is right around 90% while the jest tests were written just to show an understsanding of a front-end testing framework.
 5. __Custom Labels.__ Right now strings are hard coded in. That is bad for a number of reasons, from brandability to internationlization. While it was easy enough to accommodate through a custom label metadata file, it didn't seem entirely necessary for the assessment.
+6. __UX.__ The UX is not the most intuitive or clean UX ever.
 
 ## Bugs
 As an assessment this is not meant to be maintained. However, if you recognize major bugs please feel free to reach out.

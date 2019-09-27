@@ -122,7 +122,6 @@ export default class CaseListItem extends LightningElement {
         ).catch(e => {
             // Log the exception and present an error in visual reporting
             console.error(e);
-            that.addErrorMessage = 'Not shared: ' + response;
         });
     }
 
@@ -132,7 +131,7 @@ export default class CaseListItem extends LightningElement {
         var duplicate = false;
 
         this.caseEntities.data.forEach(function(entity) {
-            if (entity.Id.substring(0, 15) === shortEntityId) {
+            if (entity.sId.substring(0, 15) === shortEntityId) {
                 duplicate = true;
             }
         });
@@ -162,7 +161,7 @@ export default class CaseListItem extends LightningElement {
 
     // Quick front-end check to see if it is even possible for a string to be an Id
     isValidId(idValue) {
-        return idValue && idValue.match(/^([a-zA-Z0-9]{15}|[a-zA-Z0-9]{18})$/);
+        return idValue && (idValue.length === 15 || idValue.length === 18); // idValue.match(/^([a-zA-Z0-9]{15}|[a-zA-Z0-9]{18})$/);
     }
 
     // Reset visual reporting
