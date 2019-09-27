@@ -13,6 +13,13 @@ public class GroupEntity extends AEntity {
         return cast(obj).Name;
     }
 
+    /**
+     * More complex with groups than users, will build the User
+     * chain from the parent Group and return the full list of Users
+     * associated with the Group record
+     * @param obj The Group entity record to get Users for
+     * @return The full list of associated Users
+     */
     public virtual override List<User> getUsers(SObject obj) {
         Set<Id> initialGroupSet = new Set<Id> { cast(obj).Id };
         Set<Id> userIds = buildUsersFromGroups(initialGroupSet, null);

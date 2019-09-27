@@ -135,6 +135,11 @@ public with sharing class CaseListController {
         ].OwnerId;
     }
 
+    /**
+     * Get the User records and required display fields given a set of Ids
+     * @param userIds Set of User Ids to pull records for
+     * @return List of User records associated with the Ids
+     */
     public static List<User> getUsersFromIds(Set<Id> userIds) {
         return [
             SELECT
@@ -173,6 +178,13 @@ public with sharing class CaseListController {
         }
     }
 
+    /**
+     * Get the parent Groups that has share records explicitly
+     * associated with them that will act as the root for the Entity
+     * along with required display fields on the records.
+     * @param groupIds Set of Grouop Ids to pull records for
+     * @return List of Groups associated with the Group Ids
+     */
     private static List<Group> getParentGroups(Set<Id> groupIds) {
         return [
             SELECT
@@ -237,14 +249,6 @@ public with sharing class CaseListController {
         allEntities.addAll(userEntities);
         allEntities.addAll(groupEntities);
         return allEntities;
-
-        /*
-        if (!groupIds.isEmpty()) {
-            userIds = addUsersFromGroups(groupIds, userIds);
-        }
-
-        return getUsersFromIds(userIds);
-        */
     }
 
     private static Boolean isGroup(Id entityId) {

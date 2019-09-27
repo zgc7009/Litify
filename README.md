@@ -43,7 +43,7 @@ C --> F[*]
 
 ## Package (v1.1)
 
-If installing the unamanged package, the role and profile metadata will need to be deployed or manually configured in the org that the package is installed in. It is advised you deploy this repo from GitHub instead of installing the package if possible. For manual configuration, see meatadata files for required settings.
+If installing the unamanged package, you will want to deploy the role and profile metadata or manually configure it in the org that the package is installed in. It is advised you install or deploy this into a fresh org to avoid unwanted conflicts with existing org configurations. For manual configuration, see meatadata files for required settings.
 
 https://login.salesforce.com/packaging/installPackage.apexp?p0=04t4T000001ZCeq
 
