@@ -4,12 +4,12 @@
 
 1. Must enable My Domain in the org to enable the Lightning Application.
  * `Setup > Administration > Domain Management > My Domain > Configure AND Deploy to Users`
- [My Domain with Lightning](https://developer.salesforce.com/docs/atlas.en-us.lightning.meta/lightning/intro_reqs_my_domain.htm)
+ * [My Domain with Lightning](https://developer.salesforce.com/docs/atlas.en-us.lightning.meta/lightning/intro_reqs_my_domain.htm)
  
 2. If you want to run front end tests, need to have sfdx-lwc-jest installed
  * `npm install @salesforce/sfdx-lwc-jest --global`
 3. To view properly rendered mermaid in this GitHub README, download the browser extension
- [Get the Extension](https://chrome.google.com/webstore/detail/github-%20-mermaid/goiiopgdnkogdbjmncgedmgpoajilohe?hl=en)
+ * [Get the Extension](https://chrome.google.com/webstore/detail/github-%20-mermaid/goiiopgdnkogdbjmncgedmgpoajilohe?hl=en)
 
 ## Sharing
 
